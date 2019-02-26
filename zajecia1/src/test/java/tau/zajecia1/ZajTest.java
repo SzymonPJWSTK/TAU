@@ -14,7 +14,6 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class ZajTest{
-
     Math math;
 
     @Before
@@ -48,5 +47,4 @@ public class ZajTest{
         double sum = math.add(nums);
         assertEquals(1.0,sum, 0.0001);
     }
-
 }
