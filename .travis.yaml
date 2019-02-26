@@ -1,3 +1,0 @@
-language: java
-script:
-- zajecia1; mvn test
