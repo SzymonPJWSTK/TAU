@@ -20,12 +20,10 @@ public class ZajTest{
     public void init(){
         math = new Math();
     }
-
     @Test
     public void mathExistsCheck(){
         assertNotNull(math);
     }
-
     @Test
     public void addingCheck(){
         List<Double> nums = new ArrayList<Double>();
@@ -36,7 +34,6 @@ public class ZajTest{
 
         assertEquals(4.0,sum, 0.0001);
     }
-
     @Test
     public void secondAddingCheck(){
         List<Double> nums = new ArrayList<Double>();
