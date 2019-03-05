@@ -2,13 +2,22 @@ package projekt.domain;
 
 public class Band{
     
-    private int id;
+    private long id;
+    private String bandName;
 
-    public void setId(int id){
+    public void setId(long id){
         this.id = id;
     }
 
-    public int getId(){
+    public long getId(){
         return id;
+    }
+
+    public void setBandName(String name){
+        bandName = name;
+    }
+
+    public String getBandName(){
+        return bandName;
     }
 }

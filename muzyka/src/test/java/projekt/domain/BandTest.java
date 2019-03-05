@@ -17,6 +17,9 @@ public class BandTest{
     public void gettersAndSettersTest(){
         Band b = new Band();
         b.setId(2);
+        b.setBandName("Informatycy");
+
         assertEquals(2,b.getId());
+        assertEquals("Informatycy",b.getBandName());
     }
 }
