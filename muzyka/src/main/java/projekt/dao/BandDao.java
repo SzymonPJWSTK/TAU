@@ -2,13 +2,16 @@ package projekt.dao;
 import projekt.domain.Band;
 
 import java.util.Optional;
+import java.util.Map;
 import java.util.List;
 
 public class BandDao implements Dao<Band>{
 
+    protected Map<Long,Band> bands;
+
     @Override
-    public Optional<Band> get (int id){
-        return Optional.empty();
+    public Optional<Band> get (Long id){
+        return Optional.ofNullable(bands.get(id));
     }
 
     @Override
