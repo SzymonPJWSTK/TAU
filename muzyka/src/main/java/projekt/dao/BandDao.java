@@ -20,8 +20,11 @@ public class BandDao implements Dao<Band>{
     }
 
     @Override
-    public void save(Band o) {
-
+    public void save(Band o) throws IllegalArgumentException {
+        if(bands.containsKey(o.getId()))
+            throw new IllegalArgumentException("Key does exist");
+    
+        bands.put(o.getId(),o);
     }
 
     @Override

@@ -42,4 +42,23 @@ public class BandDaoTest{
         assertThat(b.get().getBandName(), is("Informatycy"));
     }
 
+    @Test
+    public void saveNewBandTest(){
+        Band band = new Band();
+        band.setId(2L);
+        band.setBandName("Testowallnica");
+        bandDao.save(band);
+
+        Optional <Band> b = bandDao.get(band.getId());
+        assertThat(b.get().getBandName(), is("Testowallnica"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void saveNewBandOnExistingIndex(){
+        Band band = new Band();
+        band.setId(1L);
+        band.setBandName("Informatycy");
+        bandDao.save(band);
+    }
+
 }
