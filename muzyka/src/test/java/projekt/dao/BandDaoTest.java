@@ -61,4 +61,22 @@ public class BandDaoTest{
         bandDao.save(band);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void updateNotExistingBand(){
+        Band updatedBand = new Band();
+        updatedBand.setId(2L);
+        updatedBand.setBandName("Nowi Informatycy");
+        bandDao.update(updatedBand);
+    }
+
+    @Test
+    public void updateExistingBand(){
+        Band updatedBand = new Band();
+        updatedBand.setId(1L);
+        updatedBand.setBandName("Nowi Informatycy");
+        bandDao.update(updatedBand);
+        
+        Optional <Band> b = bandDao.get(1L);
+        assertThat(b.get().getBandName(), is("Nowi Informatycy"));
+    }
 }

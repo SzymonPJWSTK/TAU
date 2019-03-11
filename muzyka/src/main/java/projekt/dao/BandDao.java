@@ -28,7 +28,11 @@ public class BandDao implements Dao<Band>{
     }
 
     @Override
-    public void update(Band o){
+    public void update(Band o) throws IllegalArgumentException {
+        if(!bands.containsKey(o.getId()))
+            throw new IllegalArgumentException("Key does not exist");
+
+        bands.put(1L,o);
     }
 
     @Override
