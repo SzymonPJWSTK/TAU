@@ -36,6 +36,10 @@ public class BandDao implements Dao<Band>{
     }
 
     @Override
-    public void delete(Band o) {
+    public void delete(Band o) throws IllegalArgumentException {
+        if(!bands.containsKey(o.getId()))
+            throw new IllegalArgumentException("Key does not exist");
+        
+        bands.remove(o.getId());
     }
 }

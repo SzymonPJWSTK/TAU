@@ -79,4 +79,21 @@ public class BandDaoTest{
         Optional <Band> b = bandDao.get(1L);
         assertThat(b.get().getBandName(), is("Nowi Informatycy"));
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deleteNotExistingBand(){
+        Band bandToDelet = new Band();
+        bandToDelet.setId(2L);
+        bandDao.delete(bandToDelet);
+    }
+
+    @Test
+    public void deleteExistingBand(){
+        Band bandToDelete = new Band();
+        bandToDelete.setId(1L);
+        bandDao.delete(bandToDelete);
+
+        Optional <Band> b = bandDao.get(bandToDelete.getId());
+        assertThat(b, is(Optional.empty()));
+    }
 }
