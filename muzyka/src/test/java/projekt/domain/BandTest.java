@@ -19,7 +19,7 @@ public class BandTest{
         b.setId(2);
         b.setBandName("Informatycy");
 
-        assertEquals(2,b.getId());
+        assertEquals(2,b.getId().longValue());
         assertEquals("Informatycy",b.getBandName());
     }
 }
