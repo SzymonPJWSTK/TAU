@@ -1,9 +1,4 @@
 language: java
-deploy: 
-	provider: script
-	script: sh scripts/server.sh
-on:
-	all_branches: true
-
 script:
+- sh scripts/server.sh
 - cd muzyka; mvn test
