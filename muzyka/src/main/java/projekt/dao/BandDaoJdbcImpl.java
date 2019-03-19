@@ -76,21 +76,24 @@ public class BandDaoJdbcImpl implements BandDao {
     }
 	
     @Override
-    public int deleteBand(Band band){
+    public int deleteBand(Band band) throws IllegalArgumentException{
         int count = 0;
 
-        try {
+        try{
             deleteBandStmt.setInt(1, (int) band.getId().longValue());
             count = deleteBandStmt.executeUpdate();
-        } catch (SQLException e) {
+        }catch(SQLException e){
             throw new IllegalStateException(e.getMessage() + "\n" + e.getStackTrace().toString());
         }
-        
+
+        if(count == 0)
+            throw new IllegalArgumentException("Band does not exist");
+
         return count;
     }
 	
     @Override
-    public int updateBand(Band band) throws SQLException{
+    public int updateBand(Band band) throws IllegalArgumentException{
         int count = 0;
 
         try{
@@ -102,18 +105,22 @@ public class BandDaoJdbcImpl implements BandDao {
             throw new IllegalStateException(e.getMessage() + "\n" + e.getStackTrace().toString());
         }
         
+        if(count == 0)
+            throw new IllegalArgumentException("Band does not exist");
+
         return count;
     }
     
     @Override
-    public Band getBand(long id) throws SQLException{
+    public Band getBand(long id) throws IllegalArgumentException{
 
-        Band band = new Band();
+        Band band = null;
         try {
             getBandStmt.setInt(1,(int)id);
-            ResultSet rs = getAllBandsStmt.executeQuery();
+            ResultSet rs = getBandStmt.executeQuery();
 
             while (rs.next()) {
+                band = new Band();
                 band.setId(rs.getInt("id"));
                 band.setBandName(rs.getString("name"));
                 band.setYoe(rs.getInt("yoe"));
@@ -123,6 +130,9 @@ public class BandDaoJdbcImpl implements BandDao {
             throw new IllegalStateException(e.getMessage() + "\n" + e.getStackTrace().toString());
         }
         
+        if(band == null)
+            throw new IllegalArgumentException("Id does not exist");
+
         return band;
     }
 }

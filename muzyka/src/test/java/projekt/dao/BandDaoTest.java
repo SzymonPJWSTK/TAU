@@ -85,6 +85,17 @@ public class BandDaoTest{
         assertThat(bandManager.getAllBands(), equalTo(expectedDbState));
     }
 
+    @Test (expected = IllegalArgumentException.class)
+    public void deleteNotExistingBand() throws Exception{
+        Band notExistingInDbBand = new Band();
+
+        notExistingInDbBand.setBandName("test");
+        notExistingInDbBand.setId(1000);
+        notExistingInDbBand.setYoe(0);
+
+        bandManager.deleteBand(notExistingInDbBand);
+    }
+
     @Test
     public void deleteBandTest() throws Exception{
         addbandTest();
@@ -98,6 +109,15 @@ public class BandDaoTest{
         assertThat(bandManager.getAllBands(), equalTo(expectedDbState));
     }
 
+    @Test (expected = IllegalArgumentException.class)
+    public void updateNotExistingBandTest() throws Exception{
+        Band bandNotInDB = new Band();
+        bandNotInDB.setBandName("Przykład");
+        bandNotInDB.setId(1000);
+        bandNotInDB.setYoe(0);
+        bandManager.updateBand(bandNotInDB);
+    }
+
     @Test
     public void updateBandTest() throws Exception{
         addbandTest();
@@ -109,6 +129,11 @@ public class BandDaoTest{
 
         expectedDbState.set(expectedDbState.size()-1,bandToUpdate);
         assertThat(bandManager.getAllBands(), equalTo(expectedDbState));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getNotExistingBand() throws Exception{
+        bandManager.getBand(1000);
     }
 
     @Test
