@@ -8,17 +8,11 @@ import java.util.List;
 public class BandDaoJdbcImpl implements BandDao {
 
     private Connection connection;
-
     private PreparedStatement addBandStmt;
     private PreparedStatement getAllBandsStmt;
     private PreparedStatement deleteBandStmt;
     private PreparedStatement getBandStmt;
     private PreparedStatement updateBandStmt;
-
-    public BandDaoJdbcImpl (Connection connection) throws SQLException{
-        this.connection = connection;
-        setConnection(connection);
-    }
 
     @Override
     public Connection getConnection(){
@@ -27,9 +21,9 @@ public class BandDaoJdbcImpl implements BandDao {
 
     @Override
     public void setConnection(Connection connection) throws SQLException{
-        addBandStmt = connection.prepareStatement(
-            "INSERT INTO Band (name, yoe) VALUES (?, ?)",
-            Statement.RETURN_GENERATED_KEYS);
+        this.connection = connection;
+
+        addBandStmt = connection.prepareStatement("INSERT INTO Band (name, yoe) VALUES (?, ?)",Statement.RETURN_GENERATED_KEYS);
         deleteBandStmt = connection.prepareStatement("DELETE FROM Band where id = ?");
         getAllBandsStmt = connection.prepareStatement("SELECT id, name, yoe FROM Band ORDER BY id");
         getBandStmt = connection.prepareStatement("SELECT id, name, yoe FROM Band WHERE id = ?");
@@ -44,7 +38,7 @@ public class BandDaoJdbcImpl implements BandDao {
 
             while (rs.next()) {
                 Band b = new Band();
-                b.setId(rs.getInt("id"));
+                b.setId(rs.getLong("id"));
                 b.setBandName(rs.getString("name"));
                 b.setYoe(rs.getInt("yoe"));
                 bands.add(b);
@@ -58,61 +52,42 @@ public class BandDaoJdbcImpl implements BandDao {
     }
 	
     @Override
-    public int addBand(Band band){
-        int count = 0;
-        try {
-            addBandStmt.setString(1, band.getBandName());
-            addBandStmt.setInt(2, band.getYoe());
-            count = addBandStmt.executeUpdate();
-            ResultSet generatedKeys = addBandStmt.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                band.setId(generatedKeys.getLong(1));
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException(e.getMessage() + "\n" + e.getStackTrace().toString());
-        }
+    public int addBand(Band band) throws SQLException{
+        addBandStmt.setString(1, band.getBandName());
+        addBandStmt.setInt(2, band.getYoe());
+        int count = addBandStmt.executeUpdate();
 
         return count;
     }
 	
     @Override
-    public int deleteBand(Band band) throws IllegalArgumentException{
-        int count = 0;
+    public int deleteBand(Band band) throws SQLException{
 
-        try{
-            deleteBandStmt.setInt(1, (int) band.getId().longValue());
-            count = deleteBandStmt.executeUpdate();
-        }catch(SQLException e){
-            throw new IllegalStateException(e.getMessage() + "\n" + e.getStackTrace().toString());
-        }
+        deleteBandStmt.setInt(1, (int) band.getId().longValue());
+        int count = deleteBandStmt.executeUpdate();
 
         if(count == 0)
-            throw new IllegalArgumentException("Band does not exist");
+            throw new SQLException("Band does not exist");
 
         return count;
     }
 	
     @Override
-    public int updateBand(Band band) throws IllegalArgumentException{
-        int count = 0;
+    public int updateBand(Band band) throws SQLException{
 
-        try{
-            updateBandStmt.setString(1,band.getBandName());
-            updateBandStmt.setInt(2, band.getYoe());
-            updateBandStmt.setInt(3, (int) band.getId().longValue());
-            count = updateBandStmt.executeUpdate();
-        }catch(SQLException e){
-            throw new IllegalStateException(e.getMessage() + "\n" + e.getStackTrace().toString());
-        }
+        updateBandStmt.setString(1,band.getBandName());
+        updateBandStmt.setInt(2, band.getYoe());
+        updateBandStmt.setInt(3, (int) band.getId().longValue());
+        int count = updateBandStmt.executeUpdate();
         
         if(count == 0)
-            throw new IllegalArgumentException("Band does not exist");
+            throw new SQLException("Band does not exist");
 
         return count;
     }
     
     @Override
-    public Band getBand(long id) throws IllegalArgumentException{
+    public Band getBand(long id) throws SQLException{
 
         Band band = null;
         try {
@@ -131,7 +106,7 @@ public class BandDaoJdbcImpl implements BandDao {
         }
         
         if(band == null)
-            throw new IllegalArgumentException("Id does not exist");
+            throw new SQLException("Id does not exist");
 
         return band;
     }

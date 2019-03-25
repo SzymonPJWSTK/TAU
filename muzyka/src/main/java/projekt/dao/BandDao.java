@@ -10,8 +10,8 @@ public interface BandDao{
     public Connection getConnection();
     public void setConnection(Connection connection) throws SQLException;
 	public List<Band> getAllBands();
-	public int addBand(Band band);
-	public int deleteBand(Band band);
+	public int addBand(Band band) throws SQLException;
+	public int deleteBand(Band band) throws SQLException;
 	public int updateBand(Band band) throws SQLException;
     public Band getBand(long id) throws SQLException;
 
