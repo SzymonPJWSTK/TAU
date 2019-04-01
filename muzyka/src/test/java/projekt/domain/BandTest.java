@@ -18,8 +18,10 @@ public class BandTest{
         Band b = new Band();
         b.setId(2);
         b.setBandName("Informatycy");
+        b.setGenre("Rock");
 
         assertEquals(2,b.getId().longValue());
         assertEquals("Informatycy",b.getBandName());
+        assertEquals("Rock",b.getGenre());
     }
 }

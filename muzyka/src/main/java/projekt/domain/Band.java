@@ -4,15 +4,17 @@ public class Band{
     
     private Long id;
     private String bandName;
+    private String genre;
     private Integer yoe;
 
     public Band(){
 
     }
 
-    public Band(String bandName, Integer yoe){
+    public Band(String bandName, String genre, Integer yoe){
         this.id = null;
         this.bandName = bandName;
+        this.genre = genre;
         this.yoe = yoe;
     }
 
@@ -32,6 +34,14 @@ public class Band{
         return bandName;
     }
 
+    public void setGenre(String genre){
+        this.genre = genre;
+    }
+
+    public String getGenre(){
+        return genre;
+    }
+
     public void setYoe(Integer yoe){
         this.yoe = yoe;
     }
@@ -43,7 +53,8 @@ public class Band{
     @Override
 	public boolean equals(Object o) {
 		Band other = (Band) o;
-		boolean ret = other.getBandName().equals(this.getBandName()) &&
+        boolean ret = other.getBandName().equals(this.getBandName()) &&
+                other.getGenre().equals(this.getGenre()) &&
 				((other.getId() == this.getId()) || (other.getId().longValue() == this.getId().longValue())) &&
 				((other.getYoe() == this.getYoe()) || (other.getYoe().intValue() == this.getYoe().intValue()));
 		return ret;
@@ -52,6 +63,6 @@ public class Band{
     @Override
 	public String toString() {
 		return "[" + id+ ", "
-			 + bandName + ", " + yoe + "]";
+			 + bandName + ", " + genre + ", " + yoe + "]";
 }
 }
