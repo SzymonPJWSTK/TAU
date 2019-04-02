@@ -23,11 +23,11 @@ public class BandDaoJdbcImpl implements BandDao {
     public void setConnection(Connection connection) throws SQLException{
         this.connection = connection;
 
-        addBandStmt = connection.prepareStatement("INSERT INTO Band (name, yoe) VALUES (?, ?)",Statement.RETURN_GENERATED_KEYS);
+        addBandStmt = connection.prepareStatement("INSERT INTO Band (name, genre, yoe) VALUES (?, ?, ?)",Statement.RETURN_GENERATED_KEYS);
         deleteBandStmt = connection.prepareStatement("DELETE FROM Band where id = ?");
-        getAllBandsStmt = connection.prepareStatement("SELECT id, name, yoe FROM Band ORDER BY id");
-        getBandStmt = connection.prepareStatement("SELECT id, name, yoe FROM Band WHERE id = ?");
-        updateBandStmt = connection.prepareStatement("UPDATE Band SET name=?,yoe=? WHERE id = ?");
+        getAllBandsStmt = connection.prepareStatement("SELECT id, name, genre, yoe FROM Band ORDER BY id");
+        getBandStmt = connection.prepareStatement("SELECT id, name, genre, yoe FROM Band WHERE id = ?");
+        updateBandStmt = connection.prepareStatement("UPDATE Band SET name=?, genre=?, yoe=? WHERE id = ?");
     }
 	
     @Override
@@ -40,6 +40,7 @@ public class BandDaoJdbcImpl implements BandDao {
                 Band b = new Band();
                 b.setId(rs.getLong("id"));
                 b.setBandName(rs.getString("name"));
+                b.setGenre(rs.getString("genre"));
                 b.setYoe(rs.getInt("yoe"));
                 bands.add(b);
             }
@@ -54,7 +55,8 @@ public class BandDaoJdbcImpl implements BandDao {
     @Override
     public int addBand(Band band) throws SQLException{
         addBandStmt.setString(1, band.getBandName());
-        addBandStmt.setInt(2, band.getYoe());
+        addBandStmt.setString(2,band.getGenre());
+        addBandStmt.setInt(3, band.getYoe());
         int count = addBandStmt.executeUpdate();
 
         return count;
@@ -74,10 +76,10 @@ public class BandDaoJdbcImpl implements BandDao {
 	
     @Override
     public int updateBand(Band band) throws SQLException{
-
         updateBandStmt.setString(1,band.getBandName());
-        updateBandStmt.setInt(2, band.getYoe());
-        updateBandStmt.setInt(3, (int) band.getId().longValue());
+        updateBandStmt.setString(2,band.getGenre());
+        updateBandStmt.setInt(3, band.getYoe());
+        updateBandStmt.setInt(4, (int) band.getId().longValue());
         int count = updateBandStmt.executeUpdate();
         
         if(count == 0)
@@ -97,6 +99,7 @@ public class BandDaoJdbcImpl implements BandDao {
             while (rs.next()) {
                 band = new Band();
                 band.setId(rs.getInt("id"));
+                band.setGenre(rs.getString("genre"));
                 band.setBandName(rs.getString("name"));
                 band.setYoe(rs.getInt("yoe"));
             }

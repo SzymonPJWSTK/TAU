@@ -43,6 +43,10 @@ public class BandDaoTest{
         }
         @Override
         public String getString(String columnLabel) throws SQLException {
+            if(columnLabel.equals("genre")){
+                return expectedDbState.get(i-1).getGenre();
+            }
+
             return expectedDbState.get(i-1).getBandName();
         }
         @Override
@@ -75,14 +79,15 @@ public class BandDaoTest{
             Band band = new Band();
             band.setId(i);
             band.setBandName("Informatycy"+random.nextInt(1000));
+            band.setGenre("Rock" + random.nextInt(1000));
             band.setYoe(random.nextInt(50)+1950);
             
             expectedDbState.add(band);
         }
 
-        Mockito.when(connection.prepareStatement("SELECT id, name, yoe FROM Band ORDER BY id")).thenReturn(selectStatementMock);
-        Mockito.when(connection.prepareStatement("INSERT INTO Band (name, yoe) VALUES (?, ?)",Statement.RETURN_GENERATED_KEYS)).thenReturn(insertStatementMock);
-        Mockito.when(connection.prepareStatement("UPDATE Band SET name=?,yoe=? WHERE id = ?")).thenReturn(updateStatementMock);
+        Mockito.when(connection.prepareStatement("SELECT id, name, genre, yoe FROM Band ORDER BY id")).thenReturn(selectStatementMock);
+        Mockito.when(connection.prepareStatement("INSERT INTO Band (name, genre, yoe) VALUES (?, ?, ?)",Statement.RETURN_GENERATED_KEYS)).thenReturn(insertStatementMock);
+        Mockito.when(connection.prepareStatement("UPDATE Band SET name=?, genre=?, yoe=? WHERE id = ?")).thenReturn(updateStatementMock);
         Mockito.when(connection.prepareStatement("DELETE FROM Band where id = ?")).thenReturn(deleteStatementMock);
     }
 
@@ -100,6 +105,7 @@ public class BandDaoTest{
         when(mockedResultSet.next()).thenCallRealMethod();
         when(mockedResultSet.getLong("id")).thenCallRealMethod();
         when(mockedResultSet.getString("name")).thenCallRealMethod();
+        when(mockedResultSet.getString("genre")).thenCallRealMethod();
         when(mockedResultSet.getInt("yoe")).thenCallRealMethod();
         when(selectStatementMock.executeQuery()).thenReturn(mockedResultSet);
 
@@ -111,6 +117,7 @@ public class BandDaoTest{
         verify(selectStatementMock, times(1)).executeQuery();
         verify(mockedResultSet, times(expectedDbState.size())).getLong("id");
         verify(mockedResultSet, times(expectedDbState.size())).getString("name");
+        verify(mockedResultSet, times(expectedDbState.size())).getString("genre");
         verify(mockedResultSet, times(expectedDbState.size())).getInt("yoe");
         verify(mockedResultSet, times(expectedDbState.size()+1)).next(); 
     }
@@ -124,12 +131,14 @@ public class BandDaoTest{
         bandDao.setConnection(connection);
         Band band = new Band();
         band.setBandName("Test");
+        band.setGenre("Pop");
         band.setYoe(2012);
 
         bandDao.addBand(band);
 
         inorder.verify(insertStatementMock, times(1)).setString(1, "Test");
-        inorder.verify(insertStatementMock, times(1)).setInt(2, 2012);
+        inorder.verify(insertStatementMock, times(1)).setString(2, "Pop");
+        inorder.verify(insertStatementMock, times(1)).setInt(3, 2012);
         inorder.verify(insertStatementMock).executeUpdate();
     }
 
@@ -145,12 +154,14 @@ public class BandDaoTest{
         band.setId(8);
         band.setBandName("Test");
         band.setYoe(1999);
+        band.setGenre("Disco");
 
         bandDao.updateBand(band);
 
         inorder.verify(updateStatementMock, times(1)).setString(1, "Test");
-        inorder.verify(updateStatementMock, times(1)).setInt(2, 1999);
-        inorder.verify(updateStatementMock, times(1)).setInt(3, 8);
+        inorder.verify(updateStatementMock, times(1)).setString(2, "Disco");
+        inorder.verify(updateStatementMock, times(1)).setInt(3, 1999);
+        inorder.verify(updateStatementMock, times(1)).setInt(4, 8);
         inorder.verify(updateStatementMock).executeUpdate();
     }
 
