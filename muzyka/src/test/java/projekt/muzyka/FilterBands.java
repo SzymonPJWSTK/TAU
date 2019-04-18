@@ -48,7 +48,7 @@ public class FilterBands {
         } 
     }
 
-    @Then("User should see bands that match his criteria$")
+    @Then("User should see bands that match his choices$")
     public void bandCreated() {
         for(Band b : expectedBands){
             assertEquals(genre, b.getGenre());

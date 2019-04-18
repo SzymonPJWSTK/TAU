@@ -1,14 +1,12 @@
 Feature: Creating new band
-  User creates a new band
 
-  Scenario: Band does not exist yet
+  Scenario Outline: User creates a new band
     Given user creates band Metallica
     When user clicks next
-    And such band does exist "false"
-    Then User should be told "Success"
+    And such band does exist <exists>
+    Then User should be told <result>
 
-  Scenario: Band does exist 
-    Given user creates band Metallica
-    When user clicks next
-    And such band does exist "true"
-    Then User should be told "Failure"
+  Examples:
+    | exists  |  result   |
+    | "false" | "Success" |
+    | "true"  | "Failure" |
