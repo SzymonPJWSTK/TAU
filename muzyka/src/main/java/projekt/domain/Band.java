@@ -1,8 +1,19 @@
 package projekt.domain;
+import javax.persistence.*;
+
+@Entity(name = "Band")
+@Table(name = "band")
+@NamedQueries({ 
+	@NamedQuery(name = "band.all", query = "Select b from Band b"),
+	@NamedQuery(name = "band.findBands", query = "Select b from Band b WHERE b.bandName like :bandNameFragment")
+})
 
 public class Band{
     
+	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
     private String bandName;
     private String genre;
     private Integer yoe;
