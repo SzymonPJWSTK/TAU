@@ -1,11 +1,14 @@
 package projekt.domain;
+
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity(name = "Band")
 @Table(name = "band")
 @NamedQueries({ 
 	@NamedQuery(name = "band.all", query = "Select b from Band b"),
-	@NamedQuery(name = "band.findBands", query = "Select b from Band b WHERE b.bandName like :bandNameFragment")
 })
 
 public class Band{
@@ -17,6 +20,13 @@ public class Band{
     private String bandName;
     private String genre;
     private Integer yoe;
+
+    @OneToMany(cascade = CascadeType.PERSIST,
+			fetch = FetchType.EAGER,
+			orphanRemoval=false,
+			mappedBy = "band"
+	)
+    private List<Member> members = new LinkedList<>();
 
     public Band(){
 
@@ -61,6 +71,14 @@ public class Band{
         return yoe;
     }
 
+    public List<Member> getMembers(){
+        return members;
+    }
+
+    public void setMembers(List<Member> members) {
+		this.members = members;
+}
+
     @Override
 	public boolean equals(Object o) {
 		Band other = (Band) o;
@@ -69,11 +87,12 @@ public class Band{
 				((other.getId() == this.getId()) || (other.getId().longValue() == this.getId().longValue())) &&
 				((other.getYoe() == this.getYoe()) || (other.getYoe().intValue() == this.getYoe().intValue()));
 		return ret;
-}
+    }
 
     @Override
 	public String toString() {
 		return "[" + id+ ", "
 			 + bandName + ", " + genre + ", " + yoe + "]";
-}
+    }
+
 }
